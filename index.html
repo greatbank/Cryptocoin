@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Crypto coin Bank - Secure Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#050b14',
+                        cardbg: '#0a1628',
+                        neonblue: '#00f0ff',
+                        neonhover: '#00c2d1',
+                        bordercolor: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050b14;
+            color: #f8fafc;
+        }
+        .glow-neon {
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
+        }
+        .glow-neon-lg {
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.4);
+        }
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050b14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f0ff;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-neonblue selection:text-black">
+
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <div id="login-view" class="flex-grow flex items-center justify-center p-4 relative overflow-hidden">
+        <!-- Background Ambient Glows -->
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-neonblue opacity-10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-blue-600 opacity-10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="w-full max-w-md bg-cardbg border border-bordercolor p-8 rounded-2xl shadow-2xl glow-neon relative z-10 backdrop-blur-md">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-blue-600/20 border border-neonblue/30 text-neonblue mb-4 glow-neon">
+                    <i class="fa-solid fa-cube text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold tracking-tight text-white">Coin Crypto</h1>
+                <p class="text-sm text-slate-400 mt-1">Crypto Banking</p>
+            </div>
+
+            <form id="login-form" class="space-y-5" onsubmit="handleLogin(event)">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Account Identifier</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
+                            <i class="fa-solid fa-user"></i>
+                        </span>
+                        <input type="text" id="username" required placeholder="e.g. cryptobuyer" class="w-full bg-[#050b14] border border-bordercolor rounded-xl px-4 py-3 pl-10 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-neonblue transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Access Key / Password</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
+                            <i class="fa-solid fa-lock"></i>
+                        </span>
+                        <input type="password" id="password" required placeholder="Enter security passphrase" class="w-full bg-[#050b14] border border-bordercolor rounded-xl px-4 py-3 pl-10 pr-10 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-neonblue transition">
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-neonblue">
+                            <i id="toggle-icon" class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1.5 flex items-center gap-1">
+                        <i class="fa-solid fa-circle-info text-[10px]"></i> Tip: Try password <span class="text-neonblue font-mono font-bold">demo123</span>
+                    </p>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-semibold py-3 px-4 rounded-xl hover:from-cyan-400 hover:to-blue-500 transition duration-300 shadow-lg glow-neon flex items-center justify-center gap-2 mt-2">
+                    <span>Initialize Secure Session</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashboard-view" class="hidden flex-grow flex flex-col">
+        <!-- Top Navigation Bar -->
+        <header class="bg-cardbg border-b border-bordercolor sticky top-0 z-40 px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-neonblue/10 border border-neonblue/30 flex items-center justify-center text-neonblue glow-neon">
+                    <i class="fa-solid fa-cube"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-lg tracking-tight text-white">Apex Vault</span>
+                    <span class="block text-[10px] text-neonblue tracking-widest uppercase font-mono">Mainnet Active</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="hidden sm:flex items-center gap-2 bg-[#050b14] border border-bordercolor px-3 py-1.5 rounded-full">
+                    <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+                    <span class="text-xs text-slate-300 font-mono">Node: US-East-01</span>
+                </div>
+                <button onclick="handleLogout()" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-power-off"></i>
+                    <span>Terminate Session</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Content -->
+        <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+            
+            <!-- Welcome and Quick Summary Banner -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Account Balance Card -->
+                <div class="bg-cardbg border border-bordercolor rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between glow-neon">
+                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-neonblue opacity-5 rounded-full blur-2xl pointer-events-none"></div>
+                    <div>
+                        <div class="flex items-center justify-between text-slate-400 mb-2">
+                            <span class="text-xs uppercase tracking-wider font-semibold">Total Net Liquidity</span>
+                            <i class="fa-solid fa-wallet text-neonblue"></i>
+                        </div>
+                        <div class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight flex items-baseline gap-2">
+                            <span>$48,920.45</span>
+                            <span class="text-xs text-emerald-400 font-semibold font-mono bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">+5.4%</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t border-bordercolor flex items-center justify-between text-xs text-slate-400">
+                        <span>Available Balance: <strong class="text-white font-mono">14.825 BTC</strong></span>
+                        <span class="font-mono text-neonblue">Demo Mode</span>
+                    </div>
+                </div>
+
+                <!-- Quick Action Hub -->
+                <div class="bg-cardbg border border-bordercolor rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-wider font-semibold text-slate-400">Quick Actions</span>
+                        <h2 class="text-lg font-bold text-white mt-1 mb-4">Execute Transfer</h2>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="openTransferModal()" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-semibold p-3.5 rounded-xl text-xs flex flex-col items-center justify-center gap-2 transition shadow-lg glow-neon">
+                            <i class="fa-solid fa-paper-plane text-base"></i>
+                            <span>Send Crypto</span>
+                        </button>
+                        <button onclick="openReceiveModal()" class="bg-[#050b14] border border-bordercolor hover:border-neonblue text-white font-semibold p-3.5 rounded-xl text-xs flex flex-col items-center justify-center gap-2 transition">
+                            <i class="fa-solid fa-qrcode text-base text-neonblue"></i>
+                            <span>Receive & QR</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Wallet Address & QR Quick Card -->
+                <div class="bg-cardbg border border-bordercolor rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between text-slate-400 mb-1">
+                            <span class="text-xs uppercase tracking-wider font-semibold">Active Vault ID</span>
+                            <span class="text-[10px] bg-cyan-500/10 text-neonblue px-2 py-0.5 rounded font-mono border border-cyan-500/20">Verified</span>
+                        </div>
+                        <div class="bg-[#050b14] border border-bordercolor p-2.5 rounded-xl flex items-center justify-between mt-2">
+                            <span id="wallet-id-display" class="text-xs font-mono text-slate-300 truncate mr-2">0x71C...8B92eA</span>
+                            <button onclick="copyWalletId()" class="text-slate-400 hover:text-neonblue text-xs p-1 transition" title="Copy Wallet ID">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between text-xs text-slate-400">
+                        <span>Security Level</span>
+                        <span class="text-white font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-shield-halved text-neonblue"></i> Quantum 256-bit
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Crypto Flow and Analytics Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Main Flow Chart -->
+                <div class="lg:col-span-2 bg-cardbg border border-bordercolor rounded-2xl p-6 flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <span class="text-xs uppercase tracking-wider font-semibold text-slate-400">Market Dynamics</span>
+                            <h2 class="text-lg font-bold text-white">Crypto Inflow & Outflow Analytics</h2>
+                        </div>
+                        <div class="flex items-center gap-2 bg-[#050b14] border border-bordercolor rounded-lg p-1 text-xs">
+                            <button onclick="updateChartTimeframe('24H')" class="px-3 py-1 rounded bg-neonblue text-black font-semibold transition" id="tf-24h">24H</button>
+                            <button onclick="updateChartTimeframe('7D')" class="px-3 py-1 rounded text-slate-400 hover:text-white transition" id="tf-7d">7D</button>
+                            <button onclick="updateChartTimeframe('30D')" class="px-3 py-1 rounded text-slate-400 hover:text-white transition" id="tf-30d">30D</button>
+                        </div>
+                    </div>
+                    <div class="h-64 sm:h-72 w-full relative">
+                        <canvas id="cryptoFlowChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Asset Breakdown -->
+                <div class="bg-cardbg border border-bordercolor rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-wider font-semibold text-slate-400">Holdings</span>
+                        <h2 class="text-lg font-bold text-white mb-4">Portfolio Allocation</h2>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-[#050b14] border border-bordercolor">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold">₿</div>
+                                    <div>
+                                        <div class="text-sm font-semibold text-white">Bitcoin</div>
+                                        <div class="text-xs text-slate-400">BTC</div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm font-semibold text-white">$34,250.00</div>
+                                    <div class="text-xs text-emerald-400 font-mono">+3.2%</div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-[#050b14] border border-bordercolor">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold">Ξ</div>
+                                    <div>
+                                        <div class="text-sm font-semibold text-white">Ethereum</div>
+                                        <div class="text-xs text-slate-400">ETH</div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm font-semibold text-white">$11,450.25</div>
+                                    <div class="text-xs text-emerald-400 font-mono">+7.8%</div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-[#050b14] border border-bordercolor">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-neonblue flex items-center justify-center font-bold">₳</div>
+                                    <div>
+                                        <div class="text-sm font-semibold text-white">Apex Coin</div>
+                                        <div class="text-xs text-slate-400">APEX</div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm font-semibold text-white">$3,220.20</div>
+                                    <div class="text-xs text-emerald-400 font-mono">+12.4%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Recent Transactions Table -->
+            <div class="bg-cardbg border border-bordercolor rounded-2xl p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <span class="text-xs uppercase tracking-wider font-semibold text-slate-400">Ledger</span>
+                        <h2 class="text-lg font-bold text-white">Recent Transactions</h2>
+                    </div>
+                    <span class="text-xs text-slate-400 font-mono">Encrypted Blocks</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-bordercolor text-xs text-slate-400 uppercase tracking-wider">
+                                <th class="py-3 px-4">Type</th>
+                                <th class="py-3 px-4">Address / Reference</th>
+                                <th class="py-3 px-4">Amount</th>
+                                <th class="py-3 px-4">Status</th>
+                                <th class="py-3 px-4 text-right">Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transaction-table-body" class="divide-y divide-bordercolor text-sm">
+                            <tr class="hover:bg-[#050b14]/50 transition">
+                                <td class="py-3.5 px-4 flex items-center gap-2">
+                                    <span class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs"><i class="fa-solid fa-arrow-down"></i></span>
+                                    <span class="font-medium text-white">Receive</span>
+                                </td>
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">0x88f2...3B01</td>
+                                <td class="py-3.5 px-4 font-mono text-emerald-400 font-semibold">+1.25 BTC</td>
+                                <td class="py-3.5 px-4"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-xs">Confirmed</span></td>
+                                <td class="py-3.5 px-4 text-right text-xs text-slate-400">2 mins ago</td>
+                            </tr>
+                            <tr class="hover:bg-[#050b14]/50 transition">
+                                <td class="py-3.5 px-4 flex items-center gap-2">
+                                    <span class="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center text-xs"><i class="fa-solid fa-arrow-up"></i></span>
+                                    <span class="font-medium text-white">Transfer</span>
+                                </td>
+                                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">0x34A1...9F82</td>
+                                <td class="py-3.5 px-4 font-mono text-white font-semibold">-0.45 ETH</td>
+                                <td class="py-3.5 px-4"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-xs">Confirmed</span></td>
+                                <td class="py-3.5 px-4 text-right text-xs text-slate-400">3 hours ago</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-cardbg border-t border-bordercolor py-4 text-center text-xs text-slate-500">
+            &copy; 2026 Apex Vault Decentralized Financial Systems. All demo transactions simulated securely.
+        </footer>
+    </div>
+
+    <div id="transfer-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
+        <div class="bg-cardbg border border-bordercolor w-full max-w-md rounded-2xl p-6 glow-neon-lg relative animate-in fade-in zoom-in duration-200">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-neonblue/10 border border-neonblue/30 flex items-center justify-center text-neonblue">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg text-white">Transfer Crypto</h3>
+                        <p class="text-xs text-slate-400">Instant decentralized broadcast</p>
+                    </div>
+                </div>
+                <button onclick="closeTransferModal()" class="text-slate-400 hover:text-white p-2">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="transfer-form" onsubmit="executeTransfer(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Destination Wallet Address</label>
+                    <input type="text" id="transfer-wallet" required placeholder="Enter recipient wallet (e.g. 0x...)" class="w-full bg-[#050b14] border border-bordercolor rounded-xl px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-neonblue font-mono transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Asset Type</label>
+                    <select id="transfer-asset" class="w-full bg-[#050b14] border border-bordercolor rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-neonblue transition">
+                        <option value="BTC">Bitcoin (BTC) - 14.825 Available</option>
+                        <option value="ETH">Ethereum (ETH) - 4.20 Available</option>
+                        <option value="APEX">Apex Coin (APEX) - 1,500.00 Available</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Transfer Amount</label>
+                    <div class="relative">
+                        <input type="number" step="0.0001" min="0.0001" id="transfer-amount" required placeholder="0.00" class="w-full bg-[#050b14] border border-bordercolor rounded-xl px-4 py-3 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-neonblue font-mono transition">
+                        <span id="asset-suffix" class="absolute inset-y-0 right-0 pr-4 flex items-center text-xs text-slate-400 font-mono pointer-events-none">BTC</span>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-semibold py-3 px-4 rounded-xl hover:from-cyan-400 hover:to-blue-500 transition duration-300 shadow-lg glow-neon flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-lock text-xs"></i>
+                        <span>Confirm & Broadcast Transfer</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="receive-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
+        <div class="bg-cardbg border border-bordercolor w-full max-w-sm rounded-2xl p-6 glow-neon-lg relative text-center">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs uppercase tracking-wider font-semibold text-slate-400">Receive Crypto</span>
+                <button onclick="closeReceiveModal()" class="text-slate-400 hover:text-white p-2">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="bg-white p-4 rounded-2xl inline-block mb-4 shadow-xl">
+                <!-- SVG Demo QR Code simulation -->
+                <svg class="w-48 h-48 mx-auto" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="100" height="100" fill="white"/>
+                    <!-- QR Corners -->
+                    <rect x="10" y="10" width="26" height="26" stroke="black" stroke-width="6"/>
+                    <rect x="16" y="16" width="14" height="14" fill="black"/>
+                    
+                    <rect x="64" y="10" width="26" height="26" stroke="black" stroke-width="6"/>
+                    <rect x="70" y="16" width="14" height="14" fill="black"/>
+
+                    <rect x="10" y="64" width="26" height="26" stroke="black" stroke-width="6"/>
+                    <rect x="16" y="70" width="14" height="14" fill="black"/>
+
+                    <!-- Random QR data modules -->
+                    <rect x="42" y="12" width="6" height="6" fill="black"/>
+                    <rect x="52" y="18" width="6" height="6" fill="black"/>
+                    <rect x="42" y="28" width="6" height="6" fill="black"/>
+                    <rect x="12" y="44" width="6" height="6" fill="black"/>
+                    <rect x="24" y="44" width="6" height="6" fill="black"/>
+                    <rect x="36" y="42" width="6" height="6" fill="black"/>
+                    <rect x="48" y="38" width="6" height="6" fill="black"/>
+                    <rect x="60" y="44" width="6" height="6" fill="black"/>
+                    <rect x="72" y="40" width="6" height="6" fill="black"/>
+                    <rect x="84" y="46" width="6" height="6" fill="black"/>
+                    <rect x="42" y="52" width="6" height="6" fill="black"/>
+                    <rect x="54" y="56" width="6" height="6" fill="black"/>
+                    <rect x="66" y="52" width="6" height="6" fill="black"/>
+                    <rect x="80" y="64" width="6" height="6" fill="black"/>
+                    <rect x="64" y="70" width="6" height="6" fill="black"/>
+                    <rect x="74" y="80" width="6" height="6" fill="black"/>
+                    <rect x="44" y="72" width="6" height="6" fill="black"/>
+                    <rect x="52" y="82" width="6" height="6" fill="black"/>
+                </svg>
+            </div>
+
+            <p class="text-xs text-slate-400 mb-2">Scan QR code to deposit funds to your demo vault</p>
+            <div class="bg-[#050b14] border border-bordercolor p-2.5 rounded-xl text-xs font-mono text-neonblue select-all truncate">
+                0x71C94a82b9eA2341890cf9012A34
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cryptoChartInstance = null;
+
+        // Toggle password visibility function
+        function togglePasswordVisibility() {
+            const pwdInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggle-icon');
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                pwdInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Handle Login Submission
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Strict check for password demo123 as requested
+            if (password === 'demo123') {
+                showToast(`Welcome back, ${username}! Vault session established.`, 'success');
+                document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('dashboard-view').classList.remove('hidden');
+                initChart();
+            } else {
+                showToast('Invalid security passphrase. Please try again (Hint: demo123)', 'error');
+            }
+        }
+
+        // Handle Logout
+        function handleLogout() {
+            document.getElementById('dashboard-view').classList.add('hidden');
+            document.getElementById('login-view').classList.remove('hidden');
+            document.getElementById('login-form').reset();
+            showToast('Session securely terminated.', 'info');
+        }
+
+        // Modal Controls
+        function openTransferModal() {
+            document.getElementById('transfer-modal').classList.remove('hidden');
+        }
+
+        function closeTransferModal() {
+            document.getElementById('transfer-modal').classList.add('hidden');
+            document.getElementById('transfer-form').reset();
+        }
+
+        function openReceiveModal() {
+            document.getElementById('receive-modal').classList.remove('hidden');
+        }
+
+        function closeReceiveModal() {
+            document.getElementById('receive-modal').classList.add('hidden');
+        }
+
+        // Copy Wallet ID helper
+        function copyWalletId() {
+            const walletText = "0x71C94a82b9eA2341890cf9012A34";
+            const tempInput = document.createElement("input");
+            tempInput.value = walletText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            showToast("Wallet ID copied to clipboard!", "success");
+        }
+
+        // Execute Transfer Form Submission
+        function executeTransfer(event) {
+            event.preventDefault();
+            const wallet = document.getElementById('transfer-wallet').value;
+            const amount = document.getElementById('transfer-amount').value;
+            const asset = document.getElementById('transfer-asset').value;
+
+            if (!wallet || !amount) {
+                showToast('Please provide valid destination and amount.', 'error');
+                return;
+            }
+
+            // Close modal and show success notification
+            closeTransferModal();
+            showToast(`Successfully transferred ${amount} ${asset} to wallet ${wallet.substring(0, 6)}...`, 'success');
+
+            // Prepend new transaction to table
+            const tbody = document.getElementById('transaction-table-body');
+            const newRow = document.createElement('tr');
+            newRow.className = 'hover:bg-[#050b14]/50 transition animate-in fade-in duration-300';
+            newRow.innerHTML = `
+                <td class="py-3.5 px-4 flex items-center gap-2">
+                    <span class="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center text-xs"><i class="fa-solid fa-arrow-up"></i></span>
+                    <span class="font-medium text-white">Transfer</span>
+                </td>
+                <td class="py-3.5 px-4 font-mono text-xs text-slate-300">${wallet.substring(0, 6)}...${wallet.substring(wallet.length - 4)}</td>
+                <td class="py-3.5 px-4 font-mono text-white font-semibold">-${amount} ${asset}</td>
+                <td class="py-3.5 px-4"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-xs">Confirmed</span></td>
+                <td class="py-3.5 px-4 text-right text-xs text-slate-400">Just now</td>
+            `;
+            tbody.insertBefore(newRow, tbody.firstChild);
+        }
+
+        // Toast Notification System
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = 'bg-cardbg border-neonblue text-white glow-neon';
+            let icon = 'fa-circle-check text-neonblue';
+            if (type === 'error') {
+                bgClass = 'bg-cardbg border-red-500 text-white';
+                icon = 'fa-triangle-exclamation text-red-400';
+            } else if (type === 'info') {
+                bgClass = 'bg-cardbg border-blue-500 text-white';
+                icon = 'fa-circle-info text-blue-400';
+            }
+
+            toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl border ${bgClass} shadow-2xl transition-all duration-300 translate-y-2 opacity-0 text-xs font-medium`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span>${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Initialize Chart.js Crypto Flow
+        function initChart() {
+            const ctx = document.getElementById('cryptoFlowChart').getContext('2d');
+            if (cryptoChartInstance) {
+                cryptoChartInstance.destroy();
+            }
+
+            cryptoChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                    datasets: [
+                        {
+                            label: 'Inflow ($)',
+                            data: [12000, 19000, 15000, 28000, 22000, 35000, 48920],
+                            borderColor: '#00f0ff',
+                            backgroundColor: 'rgba(0, 240, 255, 0.08)',
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointBackgroundColor: '#00f0ff'
+                        },
+                        {
+                            label: 'Outflow ($)',
+                            data: [8000, 11000, 9000, 16000, 13000, 21000, 29400],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointBackgroundColor: '#3b82f6'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#94a3b8',
+                                font: { family: 'Inter', size: 11 }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(30, 41, 59, 0.5)' },
+                            ticks: { color: '#64748b', font: { family: 'Inter', size: 10 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(30, 41, 59, 0.5)' },
+                            ticks: { color: '#64748b', font: { family: 'Inter', size: 10 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Timeframe switch simulation
+        function updateChartTimeframe(tf) {
+            ['24h', '7d', '30d'].forEach(t => {
+                const btn = document.getElementById(`tf-${t}`);
+                if (t === tf.toLowerCase()) {
+                    btn.className = 'px-3 py-1 rounded bg-neonblue text-black font-semibold transition';
+                } else {
+                    btn.className = 'px-3 py-1 rounded text-slate-400 hover:text-white transition';
+                }
+            });
+            if (cryptoChartInstance) {
+                // Randomize sample variation for demo
+                const mult = tf === '7D' ? 1.5 : (tf === '30D' ? 2.2 : 1.0);
+                cryptoChartInstance.data.datasets[0].data = [12000*mult, 22000*mult, 18000*mult, 32000*mult, 27000*mult, 41000*mult, 56000*mult];
+                cryptoChartInstance.update();
+            }
+        }
+    </script>
+</body>
+</html>
