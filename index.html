@@ -3,231 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coin Crypto Bank - </title>
+    <title>crypto - Secure Crypto Banking</title>
     <link rel="stylesheet" href="style.css">
-    <!-- FontAwesome for Icons -->
+    <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- ================= LOGIN PAGE ================= -->
+    <!-- LOGIN CONTAINER -->
     <div id="login-container" class="auth-wrapper">
         <div class="auth-card">
-            <div class="brand-header">
-                <i class="fa-brands fa-bitcoin crypto-logo"></i>
-                <h2>Forest <span class="highlight">Crypto</span></h2>
-                <p>Forest Crypto Banking</p>
+            <div class="logo-area">
+                <i class="fa-solid fa-cube glow-icon"></i>
+                <h2>Forest<span>Crypto</span></h2>
+                <p>Next-Gen Secure Web3 Banking</p>
             </div>
-            
             <form id="login-form">
                 <div class="input-group">
-                    <label for="username"><i class="fa-solid fa-user"></i> Wallet ID or Username</label>
-                    <input type="text" id="username" placeholder="e.g., username" required>
+                    <label for="username"><i class="fa-solid fa-user"></i> Username</label>
+                    <input type="text" id="username" placeholder="Enter your name" required  >
                 </div>
-                
                 <div class="input-group">
-                    <label for="password"><i class="fa-solid fa-lock"></i> Security PIN / Password</label>
+                    <label for="password"><i class="fa-solid fa-lock"></i> Password</label>
                     <input type="password" id="password" placeholder="Enter password " required>
                 </div>
-
-                <div id="login-error" class="error-msg hidden">Invalid credentials. </div>
-                
-                <button type="submit" class="btn-primary glow-btn">
-                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Access Dashboard
-                </button>
+                <div id="login-error" class="error-msg hidden">Invalid credentials. Please try again.</div>
+                <button type="submit" class="btn-primary">Access Vault <i class="fa-solid fa-arrow-right"></i></button>
             </form>
             <div class="auth-footer">
-                <p>Protected by 256-Bit Quantum Encryption Simulation</p>
+                <p><i class="fa-solid fa-shield-halved"></i> 256-Bit SSL Encrypted Demo Environment</p>
             </div>
         </div>
     </div>
 
-    <!-- ================= DASHBOARD PAGE ================= -->
+    <!-- DASHBOARD CONTAINER (Hidden by default) -->
     <div id="dashboard-container" class="dashboard-wrapper hidden">
-        <!-- Sidebar Navigation -->
+        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-brand">
-                <i class="fa-brands fa-bitcoin"></i>
-                <span>coincryptoPay</span>
+                <i class="fa-solid fa-cube"></i>
+                <h3>Forest Crypto</h3>
             </div>
             <ul class="sidebar-menu">
-                <li class="active"><i class="fa-solid fa-chart-pie"></i> Dashboard</li>
-                <li><i class="fa-solid fa-wallet"></i> Wallets</li>
-                <li><i class="fa-solid fa-right-left"></i> Exchange</li>
-                <li><i class="fa-solid fa-shield-halved"></i> Security</li>
-                <li><i class="fa-solid fa-gear"></i> Settings</li>
+                <li class="active"><a href="#"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="#" id="sidebar-transfer"><i class="fa-solid fa-right-left"></i> Transfer</a></li>
+                <li><a href="#"><i class="fa-solid fa-wallet"></i> Wallets</a></li>
+                <li><a href="#"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
+                <li><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
             </ul>
-            <div class="sidebar-footer">
-                <button id="logout-btn" class="btn-danger">
-                    <i class="fa-solid fa-power-off"></i> Log Out
-                </button>
+            <div class="sidebar-logout">
+                <button id="logout-btn" class="btn-danger"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
             </div>
         </aside>
 
-        <!-- Main Dashboard Content -->
+        <!-- Main Content Area -->
         <main class="main-content">
             <!-- Top Navbar -->
-            <header class="top-bar">
+            <header class="topbar">
                 <div class="welcome-box">
-                    <h2>Welcome back, <span class="highlight"> User</span></h2>
-                    <p>Last login: Today, 04:22 UTC</p>
+                    <h1>Welcome back, <span id="display-username">Trader</span></h1>
+                    <p>Here is your  portfolio overview</p>
                 </div>
                 <div class="user-badge">
-                    <i class="fa-solid fa-circle-check verified"></i>
-                    <span>Tier 2 Verified</span>
-                    <div class="avatar">DU</div>
+                    <div class="avatar"><i class="fa-solid fa-user-astronaut"></i></div>
+                    <span id="nav-username">Trader</span>
+                    <div class="status-dot"></div>
                 </div>
             </header>
 
             <!-- Dashboard Grid -->
             <div class="dashboard-grid">
-                
-                <!-- Balance & QR Code Card -->
+                <!-- Balance & QR Card -->
                 <div class="card balance-card">
                     <div class="card-header">
-                        <h3>Total Portfolio Balance</h3>
-                        <span class="badge live">LIVE DEMO</span>
+                        <h3>Total Portfolio Value</h3>
+                        <span class="badge-live"><i class="fa-solid fa-circle"></i> Live Vault</span>
                     </div>
-                    <div class="balance-display">
-                        <h1 id="total-balance">$48,000,000,850.45</h1>
-                        <span class="crypto-equivalent">≈ 48.3842 BTC</span>
-                    </div>
-                    <div class="action-buttons">
-                        <button id="transfer-btn" class="btn-primary glow-btn">
-                            <i class="fa-solid fa-paper-plane"></i> Transfer Funds
-                        </button>
-                        <button id="receive-btn" class="btn-secondary">
-                            <i class="fa-solid fa-qrcode"></i> QR Receive
-                        </button>
+                    <div class="balance-amount">$48,295.42 <span class="crypto-val">+12.4%</span></div>
+                    
+                    <div class="wallet-qr-section">
+                        <div class="qr-code-box">
+                            <!--  QR code representation / Generated SVG -->
+                            <svg class="qr-svg" viewBox="0 0 100 100" width="100" height="100">
+                                <rect width="100" height="100" fill="#0c1021"/>
+                                <path d="M10,10 h30 v30 h-30 z M15,15 v20 h20 v-20 z M20,20 h10 v10 h-10 z" fill="#00d2ff"/>
+                                <path d="M60,10 h30 v30 h-30 z M65,15 v20 h20 v-20 z M70,20 h10 v10 h-10 z" fill="#00d2ff"/>
+                                <path d="M10,60 h30 v30 h-30 z M15,65 v20 h20 v-20 z M20,70 h10 v10 h-10 z" fill="#00d2ff"/>
+                                <rect x="45" y="10" width="10" height="15" fill="#00d2ff"/>
+                                <rect x="55" y="30" width="10" height="10" fill="#00d2ff"/>
+                                <rect x="70" y="55" width="20" height="10" fill="#00d2ff"/>
+                                <rect x="45" y="65" width="15" height="25" fill="#00d2ff"/>
+                                <rect x="65" y="75" width="25" height="15" fill="#00d2ff"/>
+                            </svg>
+                        </div>
+                        <div class="wallet-info">
+                            <span class="label">Your  Deposit Address</span>
+                            <div class="address-box">
+                                <input type="text" readonly value="0x71C...39a9B_demo">
+                                <button class="copy-btn" title="Copy Address"><i class="fa-regular fa-copy"></i></button>
+                            </div>
+                        </div>
                     </div>
 
-                    <!--  QR Section -->
-                    <div class="qr-section">
-                        <p>Your Receive QR Code</p>
-                        <div class="qr-box">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=nexuspay_demo_wallet_address_98234" alt="Demo QR Code">
-                        </div>
-                        <span class="wallet-address">0x71C...39aB2 <i class="fa-solid fa-copy copy-icon" title="Copy Address"></i></span>
+                    <div class="action-buttons">
+                        <button id="transfer-btn" class="btn-action primary-action"><i class="fa-solid fa-paper-plane"></i> Transfer Crypto</button>
+                        <button id="receive-btn" class="btn-action secondary-action"><i class="fa-solid fa-qrcode"></i> Receive</button>
+                    </div>
+
+                    <!-- Transfer Error Banner -->
+                    <div id="transfer-error-banner" class="error-banner hidden">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>We can't transfer right now</span>
                     </div>
                 </div>
 
-                <!-- Live Crypto Flow / Ticker Card -->
+                <!-- Crypto Flow / Assets Card -->
                 <div class="card flow-card">
                     <div class="card-header">
-                        <h3><i class="fa-solid fa-wave-square"></i> Crypto Market Flow</h3>
-                        <span class="pulse-dot"></span>
+                        <h3>Crypto Flow & Assets</h3>
+                        <span class="crypto-val">24h Volume</span>
                     </div>
-                    <div class="crypto-flow-list">
-                        <div class="flow-item">
-                            <div class="coin-info">
-                                <i class="fa-brands fa-bitcoin coin-icon btc"></i>
-                                <div>
-                                    <h4>Bitcoin</h4>
-                                    <span>BTC/USD</span>
-                                </div>
+                    <div class="crypto-list">
+                        <div class="crypto-item">
+                            <div class="crypto-icon btc"><i class="fa-brands fa-bitcoin"></i></div>
+                            <div class="crypto-details">
+                                <h4>Bitcoin</h4>
+                                <span>BTC</span>
                             </div>
-                            <div class="coin-stats">
-                                <span class="price">$64,520.00</span>
-                                <span class="change positive">+3.45%</span>
+                            <div class="crypto-numbers">
+                                <p class="amt">0.65 BTC</p>
+                                <span class="val-usd">$27,450.00</span>
                             </div>
                         </div>
-
-                        <div class="flow-item">
-                            <div class="coin-info">
-                                <i class="fa-brands fa-ethereum coin-icon eth"></i>
-                                <div>
-                                    <h4>Ethereum</h4>
-                                    <span>ETH/USD</span>
-                                </div>
+                        <div class="crypto-item">
+                            <div class="crypto-icon eth"><i class="fa-brands fa-ethereum"></i></div>
+                            <div class="crypto-details">
+                                <h4>Ethereum</h4>
+                                <span>ETH</span>
                             </div>
-                            <div class="coin-stats">
-                                <span class="price">$3,480.12</span>
-                                <span class="change positive">+1.82%</span>
+                            <div class="crypto-numbers">
+                                <p class="amt">5.42 ETH</p>
+                                <span class="val-usd">$14,820.00</span>
                             </div>
                         </div>
+                        <div class="crypto-item">
+                            <div class="crypto-icon sol"><i class="fa-solid fa-bolt"></i></div>
+                            <div class="crypto-details">
+                                <h4>Solana</h4>
+                                <span>SOL</span>
+                            </div>
+                            <div class="crypto-numbers">
+                                <p class="amt">32.80 SOL</p>
+                                <span class="val-usd">$6,025.42</span>
+                            </div>
+                        </div>
+                    </div>
 
-                        <div class="flow-item">
-                            <div class="coin-info">
-                                <i class="fa-solid fa-coins coin-icon sol"></i>
-                                <div>
-                                    <h4>Solana</h4>
-                                    <span>SOL/USD</span>
-                                </div>
-                            </div>
-                            <div class="coin-stats">
-                                <span class="price">$142.50</span>
-                                <span class="change negative">-0.64%</span>
-                            </div>
+                    <!-- Mini Simulation Graph Area -->
+                    <div class="flow-graph-simulation">
+                        <div class="graph-header">
+                            <span>Network Traffic Flow</span>
+                            <span class="live-pulse"><i class="fa-solid fa-signal"></i> Optimal</span>
+                        </div>
+                        <div class="simulated-chart">
+                            <div class="bar" style="height: 40%;"></div>
+                            <div class="bar" style="height: 65%;"></div>
+                            <div class="bar" style="height: 50%;"></div>
+                            <div class="bar" style="height: 85%;"></div>
+                            <div class="bar" style="height: 70%;"></div>
+                            <div class="bar" style="height: 95%;"></div>
+                            <div class="bar" style="height: 80%;"></div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Recent Transactions Card -->
-                <div class="card transaction-card full-width">
-                    <div class="card-header">
-                        <h3>Recent Transactions</h3>
-                        <span class="link-text">View All</span>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="tx-table">
-                            <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Asset</th>
-                                    <th>Address / Reference</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="transaction-history">
-                                <tr>
-                                    <td><span class="tx-badge receive">Receive</span></td>
-                                    <td>Bitcoin (BTC)</td>
-                                    <td>0x4fA...91bc</td>
-                                    <td>+0.05 BTC ($3,226)</td>
-                                    <td><span class="status success">Completed</span></td>
-                                </tr>
-                                <tr>
-                                    <td><span class="tx-badge send">Send</span></td>
-                                    <td>Ethereum (ETH)</td>
-                                    <td>0x88b...12ea</td>
-                                    <td>-1.2 ETH ($4,176)</td>
-                                    <td><span class="status success">Completed</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
             </div>
         </main>
     </div>
 
-    <!-- ================= TRANSFER MODAL ================= -->
-    <div id="transfer-modal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fa-solid fa-paper-plane"></i> Transfer Crypto</h3>
-                <button id="close-modal" class="close-btn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="transfer-form">
-                    <div class="input-group">
-                        <label for="recipient-wallet">Enter your destination wallet address:</label>
-                        <input type="text" id="recipient-wallet" placeholder="e.g. 0xYourDestinationWalletAddressHere" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="transfer-amount">Amount (USD)</label>
-                        <input type="number" id="transfer-amount" placeholder="0.00" min="1" required>
-                    </div>
-                    <button type="submit" class="btn-primary glow-btn full-width">Confirm Transfer</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
+    <!-- Script File Linking -->
     <script src="script.js"></script>
 </body>
 </html>
